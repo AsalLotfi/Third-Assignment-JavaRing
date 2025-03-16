@@ -5,7 +5,7 @@ import org.project.object.armors.Armor;
 import org.project.object.weapons.Weapon;
 
 // TODO: UPDATE IMPLEMENTATION
-public abstract class Player {
+public abstract class Player implements Entity {
     protected String name;
     Weapon weapon;
     Armor armor;
@@ -22,6 +22,9 @@ public abstract class Player {
         this.weapon = weapon;
         this.armor = armor;
     }
+
+    // each subclasses should implement this method
+    public abstract void useAbility();
 
     @Override
     public void attack(Entity target) {

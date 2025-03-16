@@ -1,7 +1,7 @@
 package org.project.object.armors;
 
 // TODO: UPDATE IMPLEMENTATION
-public abstract class Armor {
+public abstract class Armor implements Object {
     private int defense;
     private int maxDefense;
     private int durability;
