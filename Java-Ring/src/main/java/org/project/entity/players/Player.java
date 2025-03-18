@@ -42,7 +42,6 @@ public abstract class Player implements Entity {
         hp -= damage - armor.getDefense();
     }
 
-    @Override
     public void heal(int health) {
         hp += health;
         if (hp > maxHP) {
@@ -63,6 +62,7 @@ public abstract class Player implements Entity {
         return name;
     }
 
+    @Override
     public int getHp() {
         return hp;
     }
@@ -72,6 +72,7 @@ public abstract class Player implements Entity {
         return maxHP;
     }
 
+    @Override
     public int getMp() {
         return mp;
     }

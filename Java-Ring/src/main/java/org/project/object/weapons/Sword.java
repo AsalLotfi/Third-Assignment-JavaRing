@@ -4,23 +4,35 @@ import org.project.entity.Entity;
 
 import java.util.ArrayList;
 
-// TODO: UPDATE IMPLEMENTATION
-public class Sword extends Weapon {
-    /*
-    THIS IS AN EXAMPLE OF A WEAPON DESIGN.
-    */
 
-    int abilityCharge;
+public class Sword extends Weapon {
+
+    private int abilityCharge;
+    private static final int MAX_CHARGE = 10; // Charge needed to activate special attack
 
     public Sword() {
-        // TODO: DESIGN SWORD'S ATTRIBUTES IMPLEMENT THE CONSTRUCTOR
+        super(25, 15);
+        this.abilityCharge = 0;
     }
 
-    // TODO: (BONUS) UPDATE THE UNIQUE ABILITY
-    public void uniqueAbility(ArrayList<Entity> targets) {
-        abilityCharge += 2;
-        for (Entity target : targets) {
+    // Increasing charge when attacking normally
+    public void attack(Entity target){
+
+        if (abilityCharge == MAX_CHARGE) {
+            uniqueAbility(target);
+        } else {
             target.takeDamage(getDamage());
+            chargeUp(2); // Gain 2 charge per attack
         }
+    }
+
+    // Method to charge ability
+    public void chargeUp(int amount){
+        abilityCharge += amount;
+    }
+
+    // Special ability : Deals double damage when fully charged
+    public void uniqueAbility(Entity target) {
+        target.takeDamage(getDamage() * 2);
     }
 }

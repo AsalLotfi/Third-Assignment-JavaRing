@@ -8,25 +8,63 @@ public abstract class Enemy implements Entity {
     Weapon weapon;
     private int hp;
     private int mp;
+    private final int maxHp;
+    private final int maxMp;
 
     public Enemy(int hp, int mp, Weapon weapon) {
         this.hp = hp;
         this.mp = mp;
         this.weapon = weapon;
+        this.maxHp = hp; // Store initial values as max HP and MP
+        this.maxMp = mp;
     }
 
-    // TODO: (BONUS) UPDATE THE FORMULA OF TAKING DAMAGE
+
+    @Override
+    public void attack(Entity target) {
+
+    }
+
+    @Override
+    public void defend() {
+
+    }
+
+    @Override
+    public void fillMana(int mana) {
+
+    }
+
     @Override
     public void takeDamage(int damage) {
         hp -= damage;
     }
 
+
+
+    @Override
     public int getHp() {
         return hp;
     }
 
+    @Override
     public int getMp() {
         return mp;
+    }
+
+    @Override
+    public int getMaxHP() {
+        return maxHp;
+    }
+
+    @Override
+    public int getMaxMP() {
+        return maxMp;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return hp > 0;
     }
 
     public Weapon getWeapon() {
