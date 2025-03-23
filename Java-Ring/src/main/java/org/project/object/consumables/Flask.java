@@ -1,16 +1,23 @@
 package org.project.object.consumables;
 
-import org.project.entity.Entity;
+import org.project.entity.players.Player;
 
-// TODO: UPDATE IMPLEMENTATION
+
 public class Flask extends Consumable {
-    /*
-    THIS IS AN EXAMPLE OF A CONSUMABLE DESIGN.
-    */
+    private final int healAmount; // HP restored when used
 
-    // TODO: (BONUS) UPDATE USE METHOD
+    public Flask(int healAmount) {
+        super(0); // No mana cost during combat
+        this.healAmount = healAmount;
+    }
+
     @Override
-    public void use(Entity target) {
-        target.heal(target.getMaxHP() / 10);
+    public void use(Player target) {
+        target.heal(healAmount);
+        System.out.println("You used a Flask! Restored " + healAmount + " HP.");
+    }
+
+    public int getHealAmount() {
+        return healAmount;
     }
 }
