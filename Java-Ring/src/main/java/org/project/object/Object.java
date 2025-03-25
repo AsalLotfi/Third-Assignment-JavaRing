@@ -5,7 +5,7 @@ import org.project.entity.players.Player;
 
 public interface Object {
 
-    void use(Player target);
+    void use(Entity target);
     int getManaCost();
     boolean canUse(Player player);
 }

@@ -19,7 +19,7 @@ public abstract class Weapon implements Object {
     }
 
     @Override
-    public void use(Player target) {
+    public void use(Entity target) {
         target.takeDamage(damage);
         durability -= 5;
 

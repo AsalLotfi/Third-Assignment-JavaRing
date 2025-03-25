@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        System.out.println("Welcome to Java-Ring!");
+        System.out.println("\n\nWelcome to Java-Ring!");
         System.out.println("Your adventure begins...");
         System.out.println("Please enter your name: ");
 

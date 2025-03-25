@@ -1,5 +1,6 @@
 package org.project.object.consumables;
 
+import org.project.entity.Entity;
 import org.project.entity.players.Player;
 
 public class Potion extends Consumable {
@@ -11,12 +12,12 @@ public class Potion extends Consumable {
     }
 
     @Override
-    public void use(Player target) {
-        if (target.getMp() > getManaCost()) {
-            target.heal(healAmount);
-            target.useMana(getManaCost());
+    public void use(Entity target) {
+        if (((Player)target).getMp() > getManaCost()) {
+            ((Player)target).heal(healAmount);
+            ((Player)target).useMana(getManaCost());
             System.out.println("You used a Potion! Restored " + healAmount + " HP.");
-            System.out.println("Remaining Mana: " + target.getMp());
+            System.out.println("Remaining Mana: " + ((Player)target).getMp());
         } else {
             System.out.println("Not enough mana! You need at least " + getManaCost() + " MP to use a potion.");
         }

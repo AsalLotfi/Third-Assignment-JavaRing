@@ -1,6 +1,7 @@
 package org.project.entity.players;
 
 import org.project.entity.Entity;
+import org.project.entity.enemies.Enemy;
 import org.project.object.armors.Armor;
 import org.project.object.consumables.Flask;
 import org.project.object.weapons.Weapon;
@@ -11,14 +12,15 @@ public abstract class Player implements Entity {
     Weapon weapon;
     Armor armor;
     private int hp;
-    private int maxHP;
+    private final int maxHP;
     private int mp;
-    private int maxMP;
+    private final int maxMP;
     private int flasksCount;
     private final int MAX_FLASKS;
     private int manaCharge;
     private Flask flask;
 
+    // Constructor
     public Player(String name, int hp, int mp) {
         this.name = name;
         this.hp = hp;
@@ -33,34 +35,37 @@ public abstract class Player implements Entity {
         this.flask = new Flask(10); // Create one flask object
     }
 
-    // each subclass should implement this method
-    public abstract void useAbility();
+    // each subclass should implement these methods
+    public abstract void useUniqueAbility(Enemy enemy);
+    public abstract boolean canUseUniqueAbility();
 
     @Override
     public void attack(Entity target) {
         if (weapon != null && !weapon.isBroken()) {
             weapon.use(target); // Calls the use method, reducing durability
+            System.out.println("You attacked the " + target.getClass().getSimpleName() + " with your Sword!");
+            System.out.println(target.getClass().getSimpleName() + " took " + weapon.getDamage() + " damage! (HP: " + target.getHp() + "/100)");
+
         } else {
             System.out.println("Your Weapon is broken! You deal minimal damage.");
             target.takeDamage(5); // Weak unarmed attack
+            System.out.println("You attacked the " + target.getClass().getSimpleName() + "!");
+            System.out.println(target.getClass().getSimpleName() + " took 5 damage! (HP: " + target.getHp() + "/100)");
         }
-        manaCharge(5); // Increase mana at each attack
+        manaCharge(); // Increase mana at each attack
     }
 
     // Method to charge mana
-    private void manaCharge(int amount) {
-        manaCharge += amount;
+    private void manaCharge() {
+        manaCharge += 5;
     }
 
-    @Override
-    public void defend() {
-        // TODO: (BONUS) IMPLEMENT A DEFENSE METHOD FOR SHIELDS
-    }
-
-    // TODO: (BONUS) UPDATE THE FORMULA OF TAKING DAMAGE
     @Override
     public void takeDamage(int damage) {
-        hp -= damage - armor.getDefense();
+        hp -= damage;
+        if (hp <= 0) {
+            hp = 0;
+        }
     }
 
     public void heal(int health) {

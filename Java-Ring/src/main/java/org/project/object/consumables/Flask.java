@@ -1,5 +1,6 @@
 package org.project.object.consumables;
 
+import org.project.entity.Entity;
 import org.project.entity.players.Player;
 
 
@@ -12,8 +13,8 @@ public class Flask extends Consumable {
     }
 
     @Override
-    public void use(Player target) {
-        target.heal(healAmount);
+    public void use(Entity target) {
+        ((Player)target).heal(healAmount);
         System.out.println("You used a Flask! Restored " + healAmount + " HP.");
     }
 

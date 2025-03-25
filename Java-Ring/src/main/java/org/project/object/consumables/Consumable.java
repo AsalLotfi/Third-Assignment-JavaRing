@@ -4,7 +4,7 @@ import org.project.entity.Entity;
 import org.project.entity.players.Player;
 import org.project.object.Object;
 
-// TODO: UPDATE IMPLEMENTATION
+
 public abstract class Consumable implements Object {
     private final int manaCost;
 
@@ -14,7 +14,7 @@ public abstract class Consumable implements Object {
 
     // Abstract method to be implemented by subclasses (Flask, Potion, etc.)
     @Override
-    public abstract void use(Player target);
+    public abstract void use(Entity target);
 
     // Get mana cost of the consumable
     public int getManaCost() {

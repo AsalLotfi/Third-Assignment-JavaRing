@@ -1,9 +1,10 @@
 package org.project.object.armors;
 
+import org.project.entity.Entity;
 import org.project.entity.players.Player;
 import org.project.object.Object;
 
-// TODO: UPDATE IMPLEMENTATION
+
 public abstract class Armor implements Object {
     private int defense;
     private int maxDefense;
@@ -17,6 +18,15 @@ public abstract class Armor implements Object {
         this.durability = durability;
         this.manaCost = manaCost;
         this.maxDurability = durability;
+    }
+
+    @Override
+    public void use(Entity target) {
+        if (isBroke) {
+            System.out.println("Your armor is broken and cannot be used!");
+        } else {
+            System.out.println("You are wearing your armor. Damage will be reduced by " + defense + "!");
+        }
     }
 
     public void checkBreak() {

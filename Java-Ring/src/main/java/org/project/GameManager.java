@@ -4,7 +4,10 @@ import org.project.entity.enemies.Dragon;
 import org.project.entity.enemies.Goblin;
 import org.project.entity.enemies.Skeleton;
 import org.project.entity.enemies.Enemy;
+import org.project.entity.players.Assassin;
+import org.project.entity.players.Knight;
 import org.project.entity.players.Player;
+import org.project.entity.players.Wizard;
 import org.project.location.Location;
 import org.project.object.armors.KnightArmor;
 import org.project.object.weapons.Sword;
@@ -23,9 +26,9 @@ public class GameManager {
 
         // Initialize locations with enemies
         locations = new ArrayList<>();
-        locations.add(new Location("Ruined Castle", new Skeleton(100, 20)));
-        locations.add(new Location("Dark Forest", new Goblin(80, 15)));
-        locations.add(new Location("Dragon's Lair", new Dragon(200, 20)));
+        locations.add(new Location("Ruined Castle", new Skeleton(100, 25)));
+        locations.add(new Location("Dark Forest", new Goblin(100, 20)));
+        locations.add(new Location("Dragon's Lair", new Dragon(100, 30)));
 
         // Shuffle locations so the order is randomized
         Collections.shuffle(locations);
@@ -43,6 +46,7 @@ public class GameManager {
         player.setArmor(new KnightArmor());
         player.useMana(15);
         System.out.println("You have equipped Knight Armor (-15 Mana).");
+        player.getArmor().use(player); // Armor is now worn
 
         System.out.println("Remaining Mana: " + player.getMp());
 
@@ -53,6 +57,7 @@ public class GameManager {
             Location nextLocation = getNextLocation();
             if (nextLocation != null) {
                 System.out.println("\nYou have entered " + nextLocation.getName());
+                System.out.println("A " + nextLocation.getEnemy().getClass().getSimpleName() + " appeared!");
                 combat(player, nextLocation.getEnemy());
 
                 if (!player.isAlive()) {
@@ -90,14 +95,15 @@ public class GameManager {
         Scanner scanner = new Scanner(System.in);
 
         while(player.isAlive() && enemy.isAlive()) {
-
             System.out.println("\n=== Your Turn ===\n");
-            System.out.println("[1] Attack");
-            System.out.println("[2] Use Flask (Restores HP)");
-            System.out.println("[3] Use Unique Ability");
 
             int choice;
-            while(true) { // Keep asking until valid input
+            while(true) { // Keep asking until a valid input is received
+                System.out.println("[1] Attack");
+                System.out.println("[2] Use Flask (Restores HP)");
+                System.out.println("[3] Use Unique Ability (Costs 10 Mana)");
+                System.out.print("Choose an action: ");
+
                 if (scanner.hasNextInt()) {
                     choice = scanner.nextInt();
 
@@ -110,41 +116,84 @@ public class GameManager {
                 System.out.println("Invalid choice. Please enter 1, 2, or 3.");
             }
 
-            switch (choice) {
+            boolean validAction = false; // Flag to check if action is performed
 
-                case 1: // Attack
-                    player.attack(enemy);
-                    // Check if weapon is broken
-                    if (player.getWeapon().isBroken()) {
-                        System.out.println("Warning: Your weapon is broken! Consider repairing it at Safe Haven.");
-                    }
-                    break;
+            while(!validAction) {
 
-                case 2: // Use flask
-                    if (player.getFlasksCount() > 0) {
-                        player.useFlask();
-                        System.out.println("You used a flask and restored 10 HP!");
-                    }  else {
-                        System.out.println("No flasks left!");
-                    }
-                    break;
+                switch (choice) {
+                    case 1: // Attack
+                        player.attack(enemy);
+                        // Check if weapon is broken
+                        if (player.getWeapon().isBroken()) {
+                            System.out.println("Warning: Your weapon is broken! Consider repairing it at Safe Haven.");
+                        }
+                        validAction = true;
+                        break;
 
-                case 3: // Use Unique Ability
-                    if (player.canUseUniqueAbility()) {
-                        player.useUniqueAbility(enemy);
-                        System.out.println("You used your unique ability!");
-                    } else {
-                        System.out.println("Not enough mana for Unique Ability!");
-                    }
-                    break;
+                    case 2: // Use flask
+                        if (player.getFlasksCount() > 0) {
+                            player.useFlask();
+                            System.out.println("You used a flask and restored 10 HP!");
+                            validAction = true;
+                        }  else {
+                            System.out.println("No flasks left!");
+                            System.out.println("Please choose another action.");
+                            choice = scanner.nextInt(); // Let player pick another action
+                        }
+                        break;
+
+                    case 3: // Use Unique Ability
+                        if (player instanceof Knight) { // Knight's Unique Ability
+                            Knight knight = (Knight) player;
+                            if (knight.canUseUniqueAbility()) {
+                                knight.useUniqueAbility(enemy);
+                                validAction = true;
+                            } else {
+                                System.out.println("Your unique ability is on cooldown or you lack mana!");
+                            }
+                        }
+                        else if (player instanceof Wizard) { // Wizard's Unique Ability
+                            Wizard wizard = (Wizard) player;
+                            if (wizard.canUseUniqueAbility()) {
+                                wizard.useUniqueAbility(enemy);
+                                validAction = true;
+                            } else {
+                                System.out.println("Not enough mana for the Wizard's ability!");
+                            }
+                        }
+                        else if (player instanceof Assassin) { // Assassin's unique ability
+                            Assassin assassin = (Assassin) player;
+                            if (assassin.canUseUniqueAbility()) {
+                                assassin.useUniqueAbility(enemy);
+                                validAction = true;
+                            } else {
+                                System.out.println("Not enough mana for the Assassin's ability or Still invisible!");
+                            }
+                        }
+
+                        // If the unique ability was NOT used, ask the player to choose again
+                        if (!validAction) {
+                            System.out.println("Please choose another action.");
+                            choice = scanner.nextInt();
+                        }
+                        break;
+                }
             }
 
+            if (player instanceof Knight) {
+                ((Knight) player).updateCooldown(); // CALL updateCooldown() here to track cooldowns
+            }
+
+            if (player instanceof Assassin) {
+                ((Assassin) player).updateInvisibility(); // Call updateInvisibility() here to decrement invisibility turns
+            }
 
             // Enemy's turn if still alive
             if (enemy.isAlive()) {
                 System.out.println("\n=== Enemy's Turn ===");
-                int damageTaken = player.getArmor().reduceDamage(enemy.getDamage());
-                player.takeDamage(damageTaken);
+                System.out.print(enemy.getClass().getSimpleName() + " attacked you back!");
+                enemy.attack(player);
+                System.out.println(" (HP: " + player.getHp() + "/100)");
 
                 // Check if armor is broken
                 if (player.getArmor().isBroken()) {
@@ -156,6 +205,11 @@ public class GameManager {
         // Player wins
         if (player.isAlive()) {
             System.out.println("You have defeated " + enemy.getClass().getSimpleName() + "!");
+
+            if (allLocationsCleared()) {
+                return; // player wins the game
+            }
+
             player.fillMana(30);
             System.out.println("You have gained 30 Mana! remaining mana: " + player.getMp());
 
@@ -273,7 +327,6 @@ public class GameManager {
         }
     }
 
-    // Method for
     private void loadingEffect() {
         for (int i = 0; i < 5; i++) {
 

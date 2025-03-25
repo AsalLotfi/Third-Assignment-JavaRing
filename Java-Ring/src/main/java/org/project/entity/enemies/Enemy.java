@@ -1,6 +1,8 @@
 package org.project.entity.enemies;
 
 import org.project.entity.Entity;
+import org.project.entity.players.Assassin;
+import org.project.entity.players.Player;
 
 
 public abstract class Enemy implements Entity {
@@ -8,6 +10,7 @@ public abstract class Enemy implements Entity {
     private final int maxHp;
     private int damage;
 
+    // Constructor
     public Enemy(int hp, int damage) {
         this.hp = hp;
         this.maxHp = hp; // Store initial values as max HP and MP
@@ -17,12 +20,25 @@ public abstract class Enemy implements Entity {
 
     @Override
     public void attack(Entity target) {
-        target.takeDamage(damage);
-    }
+        int finalDamage = getDamage(); // Default full damage
 
-    @Override
-    public void defend() {
+        // Check if the target is a Player (since only Players have armor)
+        if (target instanceof Player) {
+            Player player = (Player) target; // Cast Entity to Player
 
+            if (player instanceof Assassin && ((Assassin)player).isInvisible()) {
+                player.takeDamage(finalDamage);
+                System.out.print("You took 0 damage!");
+                return; // Exit the method cause Assassin is invisible so no need to Check if the player has armor
+            }
+
+            if (player.getArmor() != null && !player.getArmor().isBroken()) {
+                finalDamage = player.getArmor().reduceDamage(getDamage()); // Reduce damage if armor exists
+            }
+        }
+
+        target.takeDamage(finalDamage); // Apply final damage
+        System.out.print("You took " + finalDamage + " damage!");
     }
 
     @Override
@@ -34,6 +50,8 @@ public abstract class Enemy implements Entity {
     public int getHp() {
         return hp;
     }
+
+    public void setHp(int hp) { this.hp = hp; }
 
     @Override
     public int getMaxHP() {
