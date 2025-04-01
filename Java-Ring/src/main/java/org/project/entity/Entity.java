@@ -1,21 +1,12 @@
 package org.project.entity;
 
 public interface Entity {
-    void attack(Entity target);
 
-    void defend();
+    void attack(Entity target); // Attack another entity
+    void takeDamage(int damage); // Take damage
 
-    void heal(int health);
+    int getHp(); // get current HP
+    int getMaxHP(); // get maximum HP
 
-    void fillMana(int mana);
-
-    void takeDamage(int damage);
-
-    int getMaxHP();
-
-    int getMaxMP();
-
-    /*
-    TODO: ADD OTHER REQUIRED AND BONUS METHODS
-    */
+    boolean isAlive(); // Check if entity is still alive
 }

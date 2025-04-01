@@ -1,8 +1,28 @@
 package org.project.object.consumables;
 
-// TODO: UPDATE IMPLEMENTATION
-public abstract class Consumable {
-    /*
-    TODO: ADD OTHER REQUIRED AND BONUS METHODS
-    */
+import org.project.entity.Entity;
+import org.project.entity.players.Player;
+import org.project.object.Object;
+
+
+public abstract class Consumable implements Object {
+    private final int manaCost;
+
+    public Consumable(int manaCost) {
+        this.manaCost = manaCost;
+    }
+
+    // Abstract method to be implemented by subclasses (Flask, Potion, etc.)
+    @Override
+    public abstract void use(Entity target);
+
+    // Get mana cost of the consumable
+    public int getManaCost() {
+        return manaCost;
+    }
+
+    // Check if the consumable can be used => enough mana available
+    public boolean canUse(Player player) {
+        return player.getMp() >= manaCost;
+    }
 }

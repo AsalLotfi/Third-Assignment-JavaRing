@@ -1,6 +1,11 @@
 package org.project.object.armors;
 
-// TODO: UPDATE IMPLEMENTATION
-public class KnightArmor {
-    // TODO: DESIGN ARMOR'S ATTRIBUTES IMPLEMENT THE CONSTRUCTOR
+
+public class KnightArmor extends Armor {
+
+    public KnightArmor() {
+        super(10, 40, 15);
+    }
+
+    // No extra methods are needed since everything is already handled in Armor
 }
